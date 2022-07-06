@@ -11,7 +11,7 @@ while ! docker exec TW08D lsnrctl status | grep 'Instance "XE", status READY'; d
     sleep 2;
 done
 
-docker exec TW08D /rmanbackup/restore.sh
+docker exec TW08D /rmanbackup/restore.sh $1
 
 rm {spf,ctl,bkp}
 

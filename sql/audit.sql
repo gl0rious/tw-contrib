@@ -1,3 +1,5 @@
+alter system set AUDIT_TRAIL=db, extended scope=spfile; 
+
 ALTER DATABASE TEMPFILE '/u01/app/oracle/oradata/XE/temp.dbf' DROP;
 alter tablespace TEMP add tempfile '/u01/app/oracle/oradata/XE/temp.dbf' REUSE;
 
@@ -84,12 +86,12 @@ AUDIT SELECT ON PERSONNE BY ACCESS;
 
 SELECT * FROM V$OPTION WHERE VALUE = 'TRUE';
 
-select 'AUDIT SELECT ON '||table_name||' by ACCESS;' from all_tables where owner='TW08';
-select 'AUDIT INSERT ON '||table_name||' by ACCESS;' from all_tables where owner='TW08';
-select 'AUDIT UPDATE ON '||table_name||' by ACCESS;' from all_tables where owner='TW08';
+select 'AUDIT SELECT ON '||table_name||' by ACCESS;' from all_tables where owner='TW08' union
+select 'AUDIT INSERT ON '||table_name||' by ACCESS;' from all_tables where owner='TW08' union
+select 'AUDIT UPDATE ON '||table_name||' by ACCESS;' from all_tables where owner='TW08' union
 select 'AUDIT DELETE ON '||table_name||' by ACCESS;' from all_tables where owner='TW08';
 
-select 'NOAUDIT SELECT ON '||table_name||';' from all_tables where owner='TW08';
-select 'NOAUDIT INSERT ON '||table_name||';' from all_tables where owner='TW08';
-select 'NOAUDIT UPDATE ON '||table_name||';' from all_tables where owner='TW08';
+select 'NOAUDIT SELECT ON '||table_name||';' from all_tables where owner='TW08' union
+select 'NOAUDIT INSERT ON '||table_name||';' from all_tables where owner='TW08' union
+select 'NOAUDIT UPDATE ON '||table_name||';' from all_tables where owner='TW08' union
 select 'NOAUDIT DELETE ON '||table_name||';' from all_tables where owner='TW08';

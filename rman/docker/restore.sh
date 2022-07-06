@@ -8,7 +8,7 @@ rman target / << EOF
    startup force nomount pfile=${backupdir}/pfile_dummy.ora
 EOF
 rm -f ${backupdir}/pfile_dummy.ora
-mkdir -p /u01/app/oracle/fast_recovery_area
+#mkdir -p /u01/app/oracle/fast_recovery_area
 
 rman target / << EOF
     restore spfile from '${backupdir}/spf';

@@ -1,3 +1,3 @@
 #!/bin/sh
 
-docker exec TW08E bash -c 'sqlplus -s / as sysdba <<< "delete SYS.aud$;"'
+docker exec TW08D bash -c 'sqlplus -s / as sysdba <<< "delete SYS.aud$;"'
