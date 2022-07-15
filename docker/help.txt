@@ -1,0 +1,9 @@
+# extract Oracle Instance Client in this directory
+# set `instantclient` to Instance Client path
+
+pip install cx_Oracle
+pip install sqlparse
+
+instantclient=~/instantclient_21_1/
+export LD_LIBRARY_PATH=${instantclient}:$LD_LIBRARY_PATH
+python main.py
