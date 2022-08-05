@@ -1,3 +1,4 @@
+show PARAMETER AUDIT;
 alter system set AUDIT_TRAIL=db, extended scope=spfile; 
 
 ALTER DATABASE TEMPFILE '/u01/app/oracle/oradata/XE/temp.dbf' DROP;
@@ -40,6 +41,9 @@ select * from dba_priv_audit_opts;
 
 select name || '=' || value PARAMETER from sys.v_$parameter where name like '%audit%';
 
+SELECT view_name FROM dba_views WHERE view_name LIKE 'DBA%AUDIT%';
+
+SELECT * FROM DBA_STMT_AUDIT_OPTS;
 
 Noaudit All;
 Noaudit All Privileges;
