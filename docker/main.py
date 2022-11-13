@@ -27,7 +27,7 @@ def clean_sql(sql):
         sql = sql.replace(t,':{}'.format(i+1))
     return sql
 
-connection = cx_Oracle.connect("system/becora@localhost:1527/XE", encoding="UTF-8")
+connection = cx_Oracle.connect("system/password@localhost:1527/XE", encoding="UTF-8")
 
 cursor = connection.cursor()
 cursor.execute("""
