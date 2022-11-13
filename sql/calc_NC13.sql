@@ -27,7 +27,7 @@ CREATE OR REPLACE TYPE t_nc13_row AS OBJECT (
 /
 CREATE OR REPLACE TYPE t_nc13_tab IS TABLE OF t_nc13_row;
 /
-CREATE OR REPLACE FUNCTION NC13BF (p_cpt IN VARCHAR2,
+create or replace FUNCTION NC13BF (p_cpt IN VARCHAR2,
     p_gestion IN VARCHAR2, p_mois IN VARCHAR2, p_ord IN VARCHAR2 DEFAULT NULL 
 ) RETURN t_nc13_tab IS 
   nc13_tab t_nc13_tab;
@@ -104,7 +104,9 @@ FROM
                         CASE
                             WHEN c.TYPE_CREDIT = 'TRSF'
                                 AND lc.NAT_CRE = 1 THEN -lc.MT_CREDIT
-                                ELSE lc.MT_CREDIT
+                            WHEN c.TYPE_CREDIT = 'RETR'
+                                THEN -lc.MT_CREDIT
+                            ELSE lc.MT_CREDIT
                             END mt
                         FROM
                             CREDIT c
@@ -115,7 +117,7 @@ FROM
                             AND c.GESTION = p_gestion
                             AND to_char(c.DT_REF, 'MM')<= p_mois
                                 AND c.TYPE_CREDIT IN (
-                                    'RATT', 'TRSF'
+                                    'RATT', 'TRSF','RETR'
                                 )
                                     AND c.DT_ANNUL IS NULL
                             UNION ALL
@@ -177,7 +179,7 @@ END
                 AND c.GESTION = p_gestion
                 AND to_char(c.DT_REF, 'MM')<= p_mois
                     AND c.TYPE_CREDIT IN (
-                        'BLOC', 'DEBL', 'RETR'
+                        'BLOC', 'DEBL'--, 'RETR'
                     )
                         AND c.DT_ANNUL IS NULL
                     GROUP BY
@@ -306,11 +308,13 @@ END
             nvl(annul_dep.annul_mois, 0) dep_annul,
             (
                 nvl(depense.dep_anter, 0)+ nvl(depense.dep_mois, 0)+
-            nvl(reimput.reimput_mois, 0)+ nvl(reimput.reimput_anter, 0)-
-            nvl(annul_dep.annul_mois, 0)-nvl(annul_dep.annul_anter, 0)
+                nvl(reimput.reimput_anter, 0)+nvl(reimput.reimput_mois, 0)-
+                nvl(annul_dep.annul_anter, 0)-nvl(annul_dep.annul_mois, 0)
             ) dep_total,
             nvl(cred.mt, 0) - nvl(bloc.mt, 0) - (
-                nvl(depense.dep_anter, 0)+ nvl(depense.dep_mois, 0)+ nvl(reimput.reimput_mois, 0)+ nvl(reimput.reimput_anter, 0)- nvl(annul_dep.annul_mois, 0)
+                nvl(depense.dep_anter, 0)+ nvl(depense.dep_mois, 0)+
+                nvl(reimput.reimput_anter, 0)+nvl(reimput.reimput_mois, 0)-
+                nvl(annul_dep.annul_anter, 0)-nvl(annul_dep.annul_mois, 0)
             ) solde
         FROM
             chaps
