@@ -196,7 +196,7 @@ END
                 (
                     SELECT
                         m.CODE_ORD ord,
-                        ma.CODE_CHAPITRE chap ,
+                        nvl(ma.CODE_CHAP_SAISI ,ma.CODE_CHAPITRE) chap ,
                         sum(
 CASE WHEN m.MOIS = p_mois THEN ma.mt_net
 END) dep_mois,
@@ -219,7 +219,7 @@ END) dep_anter
 --                        )
                     GROUP BY
                         m.CODE_ORD,
-                        ma.CODE_CHAPITRE
+                        nvl(ma.CODE_CHAP_SAISI ,ma.CODE_CHAPITRE)
                 UNION ALL
                     SELECT
                         c.CODE_ORD ord,

@@ -41,6 +41,7 @@ rman auxiliary / << EOF
     NOFILENAMECHECK;
 EOF
 sqlplus -s / as sysdba <<EOF
+    alter system set AUDIT_TRAIL=db, extended scope=spfile; 
     NOAUDIT INSERT ON PERSONNE;
     NOAUDIT UPDATE ON PERSONNE;
     NOAUDIT DELETE ON PERSONNE;
@@ -69,6 +70,7 @@ sqlplus -s / as sysdba <<EOF
         END LOOP;
     END;
     /
+    startup force;
 EOF
 "
 rm -rf $backup_to

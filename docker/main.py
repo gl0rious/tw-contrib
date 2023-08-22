@@ -4,14 +4,8 @@
 
 import cx_Oracle
 import sqlparse
-# from pygments import highlight
-# from pygments.formatters import Terminal256Formatter, NullFormatter
-# from pygments import lexers
 import re
 import datetime
-
-# lex = lexers.get_lexer_by_name("sql")
-# formatter = NullFormatter(style='monokai')
 
 def print_data(cur):
     data = cur.fetchall()
@@ -27,7 +21,7 @@ def clean_sql(sql):
         sql = sql.replace(t,':{}'.format(i+1))
     return sql
 
-connection = cx_Oracle.connect("system/password@localhost:1527/XE", encoding="UTF-8")
+connection = cx_Oracle.connect("system/password@localhost:1521/XE", encoding="UTF-8")
 
 cursor = connection.cursor()
 cursor.execute("""
@@ -36,9 +30,9 @@ FROM   dba_audit_trail
 WHERE username = 'TW08' and obj_name in (
   select table_name from all_tables where owner='TW08'
 ) ORDER BY extended_timestamp asc""")
-selcur = connection.cursor()
+#selcur = connection.cursor()
 prev_sql = None
-for call in cursor.fetchall():
+for i, call in enumerate(cursor.fetchall()):
     sql = call[0]
     sql = clean_sql(sql)
     bind = call[1]
@@ -50,14 +44,11 @@ for call in cursor.fetchall():
                 .strftime('%d-%b-%Y')) \
                 if arg.endswith(" 0:0:0") else "'{}'".format(arg)
             sql = re.sub(':{}'.format(i+1), arg, sql)
-            # sql = sql.replace(':b{}'.format(i+1), arg)
     sql = sqlparse.format(sql, reindent=True, keyword_case='upper')
 
-    # sql = highlight(sql, lex, formatter)
     if sql != prev_sql:
+        if i > 1:
+            print('     -------------------------------------------------     ');
         prev_sql = sql
         print(sql+"\n;")
-        # if sql.startswith('SELECT'):
-        #     selcur.execute(sql)
-        #     print_data(selcur)
-    print('-------------------------------------------------------------------')
+        

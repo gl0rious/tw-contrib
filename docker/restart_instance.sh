@@ -1,3 +1,3 @@
 #!/bin/sh
 
-docker exec TW08D bash -c 'sqlplus -s / as sysdba <<< "startup force;"'
+docker exec TW08-ALGER bash -c 'sqlplus -s / as sysdba <<< "startup force;"'
